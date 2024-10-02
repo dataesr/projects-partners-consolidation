@@ -4,28 +4,38 @@ from code_utils.Pydref import Pydref
 from retry import retry
 import requests
 import pandas as pd
-#url matcher structure
-url='https://affiliation-matcher.staging.dataesr.ovh/match'
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+
+#urls
+url='https://affiliation-matcher.staging.dataesr.ovh/match'
+url_cluster = os.getenv('url_cluster')
 
 #fonction identifie structure
 @retry(delay=200, tries=30000)
-def identifie_structure(row,source,cached_data,nom_structure,pays,ville=False,code_projet=False,annee=False):
+def identifie_structure(row,source,cached_data,nom_structure,pays=False,ville=False,code_projet=False,annee=False):
     if row[nom_structure] in list(cached_data.keys()):
         pass
     else:
         url='https://affiliation-matcher.staging.dataesr.ovh/match'
-        f= ' '.join([row[y] for y in [x for x in [nom_structure,ville,pays] if x in list(row.keys())]])
+        f= ' '.join([str(row[y]) for y in [x for x in [nom_structure,ville,pays] if x in list(row.keys())]])
         if source=='REG_IDF':
             rnsr=requests.post(url, json= {"type":"rnsr",
                                            "year":str(row[code_projet].split('-')[3]),
                                            "query":f,"verbose":False})
-        elif (annee == False)&(source!='REG_IDF'):
+        elif (annee == False)&(source not in ['REG_IDF','ADEME']):
             rnsr=requests.post(url, json= {"type":"rnsr",
                                            "year":"20"+str(row[code_projet].split('-')[1])[-2:],
                                            "query":f,"verbose":False})
         else:
-            rnsr=requests.post(url, json= {"type":"rnsr","year":str(row[annee]),"query":f,"verbose":False})
+            if source=='ADEME':
+                annee=row['Date de dÃ©but du projet'][:4]
+            else:
+                annee=row[annee]
+            rnsr=requests.post(url, json= {"type":"rnsr","year":str(annee),"query":f,"verbose":False})
         ror=requests.post(url, json= { "query" : f , "type":"ror"})
         grid=requests.post(url, json= { "query" : f , "type":"grid"})
         result_rnsr=rnsr.json()['results']
@@ -70,25 +80,15 @@ def nettoie_scanR(x):
     
 def identifiant_prefere(row,colonnes):
     for col in colonnes:
-        if str(row[col])!='None' and str(row[col])!='NaN' and row[col] is not np.nan and str(row[col])[2:10]!='homonyms' and str(row[col])[3:11]!='homonyms':
+        if row[col]!=None and str(row[col])!='nan' and str(row[col])!='None' and str(row[col])!='NaN' and row[col] is not np.nan and str(row[col])[2:10]!='homonyms' and str(row[col])[3:11]!='homonyms':
             return row[col]
     return None
-
-#fonction pour donner un identifiant a ceux qui en ont pas
-
-def attribue_id(row,df):
-    for i in range (len(df)):
-        if row['Projet.Partenaire.Nom_organisme2']==list(df.loc[:,'Projet.Partenaire.Nom_organisme2'])[i] and (df.loc[i,'id_structure'] is np.nan or str(df.loc[i,'id_structure']) == 'None' or str(df.loc[i,'id_structure'] == 'NaN')):
-            row['id_structure']=df.loc[i,'Projet.Partenaire.Nom_organisme2']
-        else:
-            row['id_structure']= None
         
 #fonction qui aplatit une liste de listes:
 def aplatir(conteneurs):
     return [conteneurs[i][j] for i in range(len(conteneurs)) for j in range(len(conteneurs[i]))]
   
-#fonction qui remplace 
-
+#fonction qui remplace les erreurs de frappe:
 dic={" - japon":"","(vub)":"","d'hebron":""," (south africa)":"",
      "university of wageningen / biochemistry":"univeritywageningen"," - suède":"",
      " upv/ehu":"","rome la sapienza":"romaapienza","pensylvania":"penylvania",
@@ -236,7 +236,7 @@ def champs_dict(row,champ_fr,champ_en):
             return {"fr": row[champ_fr]}
         else:
             return None
-    if champ_en not in list(row.keys()) and champ_fr in list(row.keys()):
+    elif champ_en not in list(row.keys()) and champ_fr in list(row.keys()):
         if pd.isna(row[champ_fr])==False:
             return {"fr": row[champ_fr]}
         else:
@@ -258,8 +258,41 @@ def address(row,pays,ville,source):
         else:
             return None
 
+#fonctions qui récupèrent les publications et leurs dates à partir des noms et prénoms des participants
 
+def get_from_es(url,body):
+    return requests.post(url, json=body, verify=False).json()
 
+def get_data_from_elastic(url,fullname):
+    body = {
+        'size': 10,
+        'query': {
+            'bool': {
+                'filter': [
+                    {'term': {'fullName.keyword': fullname}}
+                ]
+            }
+        },
+        '_source':{
+            'excludes'
+            : 
+            ["publications", "projects", "web_content", "patents", "autocompleted", "autocompletedText"]},
+        'track_total_hits': True
+    }
+    res = get_from_es(url,body)
+    return res
+
+#extraire prénoms des données de l'ademe
+def extraire_prenom(x):
+    parts = str(x).split(' ')
+    if len(parts) > 1:  
+        part2 = parts[1].split('-')
+        prenom = part2[0].capitalize()  
+        if len(part2) > 1:
+            prenom += '-' + '-'.join([p.capitalize() for p in part2[1:]])
+        return prenom
+    else:
+        return ''
 
 
 
