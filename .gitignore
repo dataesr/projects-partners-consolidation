@@ -1,9 +1,4 @@
 .env
 *.xlsx
-ANR/*
-ANSES/*
-IRESP/*
-SIRANO/*
-REG_IDF/*
-ADEME/*
+DATA/*
 structures_manquantes/*
