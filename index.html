@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      Télécharger les données des agences de financements complétées par les
+      identifiants de structures et de personnes
+    </title>
+  </head>
+  <body>
+    <h1>Choisissez une source pour télécharger les données complétées</h1>
+    <form action="/" method="post">
+      <label for="source">Sélectionnez une source :</label>
+      <select name="source" id="source" required>
+        {% for source in sources %}
+        <option value="{{ source }}">{{ source }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Télécharger les données</button>
+    </form>
+  </body>
+</html>
