@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import requests
 import pandas as pd
 import numpy as np
@@ -22,13 +22,17 @@ url_cluster=os.getenv('url_cluster')
 
 sources=pd.read_json('sources.json')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/select_source', methods=['GET'])
+def select_source():
+    return render_template('select_source.html', sources=sources.keys())
+
+@app.route('/', methods=['POST'])
 def process_data():
     if request.method == 'POST':
         source = request.form.get('source')
     else: 
         None
-        
+
     if source not in sources.keys():
         return jsonify({"error": "Source invalide ou manquante"}), 400
 
