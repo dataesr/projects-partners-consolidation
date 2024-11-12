@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sélection de la source</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      label {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #555;
+      }
+      select {
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        border: 1px solid white;
+        border-radius: 5px;
+        width: 250px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sélectionnez la source de données</h1>
+      <form action="/index" method="POST">
+        <label for="source">Source :</label>
+        <select name="source" id="source">
+          <option value="ANR">ANR - Agence nationale de recherche</option>
+          <option value="ANSES">
+            ANSES - Agence nationale de sécurité sanitaire
+          </option>
+          <option value="IRESP">
+            Institut pour la recherche en santé publique
+          </option>
+          <option value="REG_IDF">Région Île-de-France</option>
+          <option value="SIRANO">SIRANO</option>
+        </select>
+        <button type="submit">Lancer le Traitement</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -22,19 +22,21 @@ url_cluster=os.getenv('url_cluster')
 
 sources=pd.read_json('sources.json')
 
-@app.route('/select_source', methods=['GET'])
+@app.route('/', methods=['GET'])
 def select_source():
-    return render_template('select_source.html', sources=sources.keys())
+    return render_template('select_source.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/index', methods=['POST'])
 def process_data():
     if request.method == 'POST':
         source = request.form.get('source')
+        if not source:
+            return jsonify({"error": "No source selected"}), 400
     else: 
-        None
+        return jsonify({"error": "Invalid method, only POST allowed"}), 405
 
     if source not in sources.keys():
-        return jsonify({"error": "Source invalide ou manquante"}), 400
+        return jsonify({"error": "No source selected"}), 400
 
     cached_data, cached_data_persons, cached_data_orcid=load_or_create_caches(source)
     
