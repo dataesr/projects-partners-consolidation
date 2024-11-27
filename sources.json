@@ -12,15 +12,20 @@
     "pays": "Projet.Partenaire.Adresse.Pays",
     "code_projet": "Projet.Code_Decision_ANR",
     "annee": "AAP.Edition",
-    "identifiants_preferes_structure": [],
+    "identifiants_preferes_structure": [
+      "Projet.Partenaire.Code_RNSR",
+      "id_structure_matcher",
+      "id_structure_scanr",
+      "code"
+    ],
     "identifiants_preferes_personne": ["id_personne", "idref_ORCID"],
     "id_ORCID": "Projet.Partenaire.Responsable_scientifique.ORCID",
-    "titre_fr": "",
-    "titre_en": "",
-    "resume_fr": "",
-    "resume_en": "",
-    "budget": "",
-    "acronyme": ""
+    "titre_fr": "Projet.Titre.Francais",
+    "titre_en": "Projet.Titre.Anglais",
+    "resume_fr": "Projet.Resume.Francais",
+    "resume_en": "Projet.Resume.Anglais",
+    "budget": "Projet.Montant.AF.Aide_allouee.ANR",
+    "acronyme": "Projet.Acronyme"
   },
   "ANSES": {
     "url_partenaires": "https://www.data.gouv.fr/fr/datasets/r/d0b0b666-d997-4ffa-b501-7a3d81dcdf32",
