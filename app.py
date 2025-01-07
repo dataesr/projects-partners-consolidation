@@ -5,10 +5,10 @@ import numpy as np
 import os
 from dotenv import load_dotenv
 from tqdm import tqdm
-from code_utils.functions import (
-    extraire_prenom, get_data_from_elastic, address, champs_dict, 
-    identifie_structure, identifie_personne, identifiant_prefere, 
-    replace_all, nettoie_scanR, orcid_to_idref, persons
+from code_utils.utils import (
+    extract_first_name, get_data_from_elastic, address, dict_features, 
+    get_structure, get_person, get_id, 
+    replace_all, get_scanR_structure, orcid_to_idref, persons
 )
 from code_utils.pickle import load_cache, write_cache
 
@@ -104,7 +104,7 @@ def get_data_with_structures(df_partenaires, source, cached_data):
         lambda x: replace_all(str(x).lower())
     )
     df_partenaires_struct=df_partenaires.copy()
-    df_partenaires_struct.progress_apply(lambda row: identifie_structure(row, source, cached_data, sources[source]['nom_structure'], sources[source]['ville'], sources[source]['pays'], sources[source]['code_projet'], False), axis=1)
+    df_partenaires_struct.progress_apply(lambda row: get_structure(row, source, cached_data, sources[source]['nom_structure'], sources[source]['ville'], sources[source]['pays'], sources[source]['code_projet'], False), axis=1)
     return df_partenaires_struct
 
 
@@ -114,7 +114,7 @@ def complete_with_scanr(df_partenaires_struct, source):
     df_scanR=pd.DataFrame(page_scanR)
     scanR=df_scanR.explode('participants').loc[:, ['id', 'participants']]
     scanR['id_structure_scanr']=scanR['participants'].apply(lambda x: x.get('structure') if isinstance(x, dict) else None)
-    scanR['nom_struct']=scanR['participants'].apply(lambda x: nettoie_scanR(x))
+    scanR['nom_struct']=scanR['participants'].apply(lambda x: get_scanR_structure(x))
     scanR_nettoye=scanR.drop_duplicates(subset='nom_struct')
     scanR_nettoye[f"{sources[source]['nom_structure']}2"]=scanR_nettoye['nom_struct'].apply(lambda x: replace_all(str(x).lower()))
     return pd.merge(df_partenaires_struct, scanR_nettoye, on=f"{sources[source]['nom_structure']}2", how='left')
