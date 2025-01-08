@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-#get a dictionnary for persons like : {"id":"idref", "first_name":"prénom", "last_name":"nom" }
+#get a dictionnary for persons like : {"id":"idref", "first_name":"firstname of the person", "last_name":"lastname of the person" }
 def persons(row, prenom, nom):
     if pd.isna(row['id_structure'])==False and row['id_structure']!='x':
         dict_row={"id" : row['id_person'], "first_name": row[prenom], "last_name": row[nom], "role":f"scientific-officer###{str(row['id_structure'])}"}
@@ -10,7 +10,7 @@ def persons(row, prenom, nom):
     dict_row2={k:v for k,v in dict_row.items() if (pd.isna(v)==False)}
     return dict_row2
 
-#get a dictionnary for projects like : {"fr": "titre ou résumé en français", "en": "titre ou résumé en anglais"}
+#get a dictionnary for projects like : {"fr": "title or resume in french", "en": "title or resume in english"}
 def projects(row,champ_fr,champ_en):
     if champ_en in list(row.keys()):
         if pd.isna(row[champ_fr])==False and pd.isna(row[champ_en])==False:
