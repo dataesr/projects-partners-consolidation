@@ -9,10 +9,6 @@ app=Flask(__name__)
 
 sources=pd.read_json('sources.json')
 
-@app.route('/', methods=['GET'])
-def select_source():
-    return render_template('select_source.html')
-
 @app.route('/process', methods=['GET'])
 def process_data():
     args = request.args
