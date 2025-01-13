@@ -40,15 +40,19 @@
     "pays": "Pays",
     "code_projet": "code convention homogénéisé",
     "annee": "Code convention",
-    "identifiants_preferes_structure": [],
+    "identifiants_preferes_structure": [
+      "id_structure_matcher",
+      "id_structure_scanr",
+      "code"
+    ],
     "identifiants_preferes_personne": ["id_personne"],
     "id_ORCID": "",
-    "titre_fr": "",
-    "titre_en": "",
-    "resume_fr": "",
-    "resume_en": "",
-    "budget": "",
-    "acronyme": ""
+    "titre_fr": "Titre FR",
+    "titre_en": "Titre EN",
+    "resume_fr": "Résumé FR",
+    "resume_en": "Résumé EN",
+    "budget": "Subvention ",
+    "acronyme": "Acronyme"
   },
   "IRESP": {
     "url_partenaires2": "https://www.data.gouv.fr/fr/datasets/r/67744c92-39b9-450c-8f6c-296d47fa90a4",
@@ -89,10 +93,14 @@
     "region": "region",
     "code_projet": "appel_a_projets",
     "annee": "annee_de_selection",
-    "identifiants_preferes_structure": [],
+    "identifiants_preferes_structure": [
+      "id_structure_matcher",
+      "id_structure_scanr",
+      "code"
+    ],
     "identifiants_preferes_personne": ["id_personne"],
     "id_ORCID": "",
-    "titre_fr": "",
+    "titre_fr": "titre",
     "titre_en": "",
     "resume_fr": "",
     "resume_en": "",

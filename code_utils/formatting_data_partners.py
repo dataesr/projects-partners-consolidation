@@ -1,24 +1,47 @@
+from dotenv import load_dotenv
+import numpy as np
+import os
 import pandas as pd
+import requests
 
 from code_utils.features_into_dictionnary import address
 
+load_dotenv()
+Authorization = os.getenv('Authorization_access_185')
+
 def formatting_partners_data(sources, source):
-    df_partenaires=pd.read_json(f"./DATA/{source}/df_partenaires_id_structures.json")
+    df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_structures.json")
     ### ATTENTION, vérifier que les projets sirano sont dans des structures françaises
     if source=='IRESP':
-        df_partenaires[sources[source]['pays']]=df_partenaires.loc[:,sources[source]['ville']].apply(lambda x: x.split('(')[1].replace(')','') if x.find('(')>=0 else 'France')
-        df_partenaires.loc[:,sources[source]['ville']]=df_partenaires.loc[:,sources[source]['ville']].apply(lambda x: x.split('(')[0] if x.find('(')>=0 else x)
+        df_partners[sources[source]['pays']]=df_partners.loc[:,sources[source]['ville']].apply(lambda x: x.split('(')[1].replace(')','') if x.find('(')>=0 else 'France')
+        df_partners.loc[:,sources[source]['ville']]=df_partners.loc[:,sources[source]['ville']].apply(lambda x: x.split('(')[0] if x.find('(')>=0 else x)
     
-    df_partenaires['address']=df_partenaires.apply(lambda row: address(row,sources[source]['pays'],sources[source]['ville'],source), axis=1)
-    df_partenaires.loc[:,'id_structure']=df_partenaires.loc[:,'id_structure'].apply(lambda x: x[0] if isinstance(x,list) else x )
+    df_partners['address']=df_partners.apply(lambda row: address(row,sources[source]['pays'],sources[source]['ville'],source), axis=1)
+    df_partners.loc[:,'id_structure']=df_partners.loc[:,'id_structure'].apply(lambda x: x[0] if isinstance(x,list) else x )
     if source in ['ANSES','SIRANO']:
-        df_partenaires['id']=df_partenaires.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[{sources[source]['nom_structure']}+'2']}-{row[sources[source]['nom']]}-{row[sources[source]['prenom']]}" , axis=1)
+        df_partners['id']=df_partners.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[{sources[source]['nom_structure']}+'2']}-{row[sources[source]['nom']]}-{row[sources[source]['prenom']]}" , axis=1)
     if source =='REG_IDF':
-        df_partenaires['id']=df_partenaires.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[str(sources[source]['nom_structure'])+'2']}-{row['entite_role']}" , axis=1)
-    df_partenaires['address']=df_partenaires.apply(lambda row: address(row,sources[source]['pays'],sources[source]['ville'],source), axis=1)
-    df_partenaires=df_partenaires.rename(columns={sources[source]['nom_structure']: 'name', sources[source]['code_projet']: 'project_id', 'id_structure':'participant_id','Projet.Partenaire.Code_Decision_ANR':'id'})
-    df_partenaires=df_partenaires[['name','id','project_id','participant_id','address']]
-    df_partenaires['project_type']=source
-    df_partenaires['participant_id']=df_partenaires.loc[:,'participant_id'].apply(lambda x: str(x[0]).replace('.0','') if isinstance(x,list) else str(x).split(';')[0].replace('.0',''))
-    df_partenaires=df_partenaires[['id','project_id', 'project_type', 'participant_id', 'name','address']]
-    df_partenaires['name'] = df_partenaires['name'].astype(str)
+        df_partners['id']=df_partners.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[str(sources[source]['nom_structure'])+'2']}-{row['entite_role']}" , axis=1)
+    df_partners['address']=df_partners.apply(lambda row: address(row,sources[source]['pays'],sources[source]['ville'],source), axis=1)
+    df_partners=df_partners.rename(columns={sources[source]['nom_structure']: 'name', sources[source]['code_projet']: 'project_id', 'id_structure':'participant_id','Projet.Partenaire.Code_Decision_ANR':'id'})
+    df_partners=df_partners[['name','id','project_id','participant_id','address']]
+    df_partners['project_type']=source
+    df_partners['participant_id']=df_partners.loc[:,'participant_id'].apply(lambda x: str(x[0]).replace('.0','') if isinstance(x,list) else str(x).split(';')[0].replace('.0',''))
+    df_partners=df_partners[['id','project_id', 'project_type', 'participant_id', 'name','address']]
+    df_partners['name'] = df_partners['name'].astype(str)
+    print(f"There is no duplicated id :{len(df_partners[df_partners.duplicated(subset=['id'])])==0}")
+    return df_partners
+
+def filter_new_partners(df_partners):
+    nbr_page=int(requests.get('http://185.161.45.213/projects/participations?where={"project_type":"ANR"}&projection={"id":1}&max_results=500&page=1', headers={"Authorization":Authorization}).json()['hrefs']['last']['href'].split('page=')[1])
+    list_ids=[]
+    for i in range(1,nbr_page+1):
+        print("page",i)
+        page=requests.get('http://185.161.45.213/projects/participations?where={"project_type":"ANR"}&projection={"id":1}&max_results=500'+f"&page={i}", headers={"Authorization":Authorization}).json()
+        for k in range(len(page['data'])):
+            print("k",k)
+            list_ids.append(page['data'][k]['id'])    
+    projets_a_ajouter=[x for x in list(df_partners['id'].drop_duplicates()) if x not in list(pd.Series(list_ids).drop_duplicates())]
+    projets_a_retirer=[x for x in list_ids if x not in list(df_partners['id'])]
+    df_partners = df_partners[df_partners['id'].apply(lambda x: x in projets_a_ajouter)]
+    return df_partners

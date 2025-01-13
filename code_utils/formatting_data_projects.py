@@ -10,25 +10,24 @@ from code_utils.utils import get_id
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')
 
-
 def formatting_projects_data(sources, source):
     #access partner data that has already been processed
     if len(sources[source]['identifiants_preferes_personne'])==2:
-        df_partenaires=pd.read_json(f"./DATA/{source}/df_partenaires_id_personne_ORCID.json")
+        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_personne_ORCID.json")
     elif len(sources[source]['identifiants_preferes_personne'])==1:
-        df_partenaires=pd.read_json(f"./DATA/{source}/df_partenaires_id_personne.json")
+        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_personne.json")
     else:
-        df_partenaires=pd.read_json(f"./DATA/{source}/df_partenaires_id_structures.json")
-    df_partenaires.loc[df_partenaires.id_structure.apply(lambda x :isinstance(x,list)),'id_structure']=df_partenaires.loc[df_partenaires.id_structure.apply(lambda x :isinstance(x,list)),'id_structure'].apply(lambda y: y[0])
+        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_structures.json")
+    df_partners.loc[df_partners.id_structure.apply(lambda x :isinstance(x,list)),'id_structure']=df_partners.loc[df_partners.id_structure.apply(lambda x :isinstance(x,list)),'id_structure'].apply(lambda y: y[0])
     if len([x for x in ['nom', 'prenom'] if x in list(sources[source].keys())])==2:
-        df_partenaires['id_person']=df_partenaires.apply(lambda row: get_id(row,sources[source]['identifiants_preferes_personne']), axis=1)
-        df_partenaires['persons']=df_partenaires.progress_apply(lambda row: persons(row,sources[source]['prenom'],sources[source]['nom']) ,axis=1)
+        df_partners['id_person']=df_partners.apply(lambda row: get_id(row,sources[source]['identifiants_preferes_personne']), axis=1)
+        df_partners['persons']=df_partners.progress_apply(lambda row: persons(row,sources[source]['prenom'],sources[source]['nom']) ,axis=1)
     else:
-        df_partenaires['persons']=np.nan
+        df_partners['persons']=np.nan
     if source != 'SIRANO':
-        df_partenaires=df_partenaires.groupby([sources[source]['code_projet']]).agg({'persons': lambda x: [ y for y in x.tolist() if pd.isna(y)==False]}, dropna=False).reset_index()
+        df_partners=df_partners.groupby([sources[source]['code_projet']]).agg({'persons': lambda x: [ y for y in x.tolist() if pd.isna(y)==False]}, dropna=False).reset_index()
     else:
-        df_projects=df_partenaires.groupby([sources[source]['code_projet'], sources[source]['annee'], sources[source]['acronyme'],sources[source]['titre'],sources[source]['budget']], dropna=False).agg({'persons': lambda x: [ y for y in x.tolist() if pd.isna(y)==False]}, dropna=False)
+        df_projects=df_partners.groupby([sources[source]['code_projet'], sources[source]['annee'], sources[source]['acronyme'],sources[source]['titre'],sources[source]['budget']], dropna=False).agg({'persons': lambda x: [ y for y in x.tolist() if pd.isna(y)==False]}, dropna=False)
     #bring projects from the website 
     if source=='ANR':
         page_projects_10 = requests.get(sources[source]['url_projects']).json()
@@ -46,9 +45,9 @@ def formatting_projects_data(sources, source):
     del df_projects['index']
     #join projects data and partners data to make a link between the project and all people working on it
     if source!='SIRANO':
-        df_projects=pd.merge(df_projects,df_partenaires,on=sources[source]['code_projet'], how='left')
+        df_projects=pd.merge(df_projects,df_partners,on=sources[source]['code_projet'], how='left')
     else :
-        df_projects['id']=df_partenaires.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[sources[source]['annee']]}-{row[sources[source]['acronyme']]}" , axis=1)
+        df_projects['id']=df_partners.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[sources[source]['annee']]}-{row[sources[source]['acronyme']]}" , axis=1)
         del df_projects['code_projet']
         sources[source]['code_projet']='id'
     #rename the features 

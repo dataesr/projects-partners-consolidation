@@ -4,7 +4,8 @@ import requests
 
 from dotenv import load_dotenv
 
-from code_utils.formatting_data_partners import filter_new_projects
+from code_utils.formatting_data_partners import filter_new_partners
+from code_utils.formatting_data_projects import filter_new_projects
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')
@@ -27,8 +28,11 @@ def send_data(df, url):
             pp.pprint(e)
 
 #if we only need to update the new projects or partners
-def send_only_newer_data(df, url):
-    send_data(filter_new_projects(df), url)
+def send_only_newer_data(df, url, type):
+    if type == 'projects' :
+        send_data(filter_new_projects(df), url)
+    else:
+        send_data(filter_new_partners(df), url)
 
 #if we only need to make changes to specific features within projects
 def edit_projects():
