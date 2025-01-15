@@ -1,4 +1,6 @@
 .env
 *.xlsx
-DATA/*
+*.json
+*.jsonl
+*.pkl
 structures_manquantes/*
