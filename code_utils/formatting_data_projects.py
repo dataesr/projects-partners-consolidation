@@ -13,9 +13,9 @@ Authorization = os.getenv('Authorization_access_185')
 def formatting_projects_data(sources, source):
     #access partner data that has already been processed
     if len(sources[source]['identifiants_preferes_personne'])==2:
-        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_personne_ORCID.json")
+        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_person_ORCID.json")
     elif len(sources[source]['identifiants_preferes_personne'])==1:
-        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_personne.json")
+        df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_person.json")
     else:
         df_partners=pd.read_json(f"./DATA/{source}/df_partners_id_structures.json")
     df_partners.loc[df_partners.id_structure.apply(lambda x :isinstance(x,list)),'id_structure']=df_partners.loc[df_partners.id_structure.apply(lambda x :isinstance(x,list)),'id_structure'].apply(lambda y: y[0])
@@ -54,18 +54,18 @@ def formatting_projects_data(sources, source):
     df_projects['type']=source
     df_projects['name']=df_projects.progress_apply(lambda row: projects(row,sources[source]['titre_fr'],sources[source]['titre_en']) ,axis=1)
     df_projects['description']=df_projects.progress_apply(lambda row: projects(row,sources[source]['resume_fr'],sources[source]['resume_en']) ,axis=1)
-    df_projects.loc[:,sources[source]['budget']]=df_projects.loc[:,sources[source]['budget']].apply(lambda x : float(str(x).replace('.0','').replace('.00','').replace(' ','').replace(',','.').replace('€','')))
+    df_projects.loc[:,sources[source]['budget']]=df_projects.loc[:,sources[source]['budget']].apply(lambda x : float(str(x).replace('.0','').replace('.00','').replace(' ','').replace(',','.').replace('€','').replace('\x80','')))
     df_projects=df_projects.rename(columns={sources[source]['annee']:'year',sources[source]['acronyme']:'acronym',
                                         sources[source]['budget']:'budget_financed',sources[source]['code_projet']:'id'})
     df_projects=df_projects[['id','type','name','description','acronym','year','budget_financed','persons']]
     return df_projects
 
-def filter_new_projects(df_projects):
-    nbr_page=int(requests.get('http://185.161.45.213/projects/projects?where={"type":"ANR"}&projection={"id":1}&max_results=500&page=1', headers={"Authorization":Authorization}).json()['hrefs']['last']['href'].split('page=')[1])
+def filter_new_projects(df_projects, source):
+    nbr_page=int(requests.get('http://185.161.45.213/projects/projects?where={"type":"'+str(source)+'"}&projection={"id":1}&max_results=500&page=1', headers={"Authorization":Authorization}).json()['hrefs']['last']['href'].split('page=')[1])
     list_ids=[]
     for i in range(1,nbr_page+1):
         print("page",i)
-        page=requests.get('http://185.161.45.213/projects/projects?where={"type":"ANR"}&projection={"id":1}&max_results=500'+f"&page={i}", headers={"Authorization":Authorization}).json()
+        page=requests.get('http://185.161.45.213/projects/projects?where={"type":"'+str(source)+'"}&projection={"id":1}&max_results=500'+f"&page={i}", headers={"Authorization":Authorization}).json()
         for k in range(len(page['data'])):
             print("k",k)
             list_ids.append(page['data'][k]['id'])

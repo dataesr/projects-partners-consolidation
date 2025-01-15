@@ -20,33 +20,35 @@ def process_data():
     get_id_person(df_partenaires_structures, source, sources, cached_data_persons, cached_data_orcid)
     return jsonify({"message": "Processing completed successfully", "source": source}), 202
 
-@app.route('/send_projects', methods=['POST']) 
+@app.route('/send/project', methods=['GET','POST']) 
 def send_projects():
     args = request.args
     source = args.get('source')
     df_projects=formatting_projects_data(sources, source)
     send_data(df_projects, 'http://185.161.45.213/projects/projects')
-
-@app.route('/update_projects', methods=['POST']) 
-def update_projects():
-    args = request.args
-    source = args.get('source')
-    df_projects=formatting_projects_data(sources, source)
-    send_only_newer_data(df_projects, 'http://185.161.45.213/projects/projects', 'projects')
-
-@app.route('/send_partners', methods=['POST']) 
+    
+@app.route('/send/partner', methods=['GET','POST']) 
 def send_partners():
     args = request.args
     source = args.get('source')
     df_projects=formatting_partners_data(sources, source)
     send_data(df_projects, 'http://185.161.45.213/projects/participations')
 
-@app.route('/update_partners', methods=['POST']) 
+@app.route('/update/project', methods=['GET','POST']) 
+def update_projects():
+    args = request.args
+    source = args.get('source')
+    df_projects=formatting_projects_data(sources, source)
+    send_only_newer_data(df_projects, 'http://185.161.45.213/projects/projects', 'projects', source)
+    return jsonify({"message": "Update completed successfully", "source": source}), 202
+
+@app.route('/update/partner', methods=['GET','POST']) 
 def update_partners():
     args = request.args
     source = args.get('source')
     df_projects=formatting_partners_data(sources, source)
-    send_only_newer_data(df_projects, 'http://185.161.45.213/projects/participations', 'partners')
+    send_only_newer_data(df_projects, 'http://185.161.45.213/projects/participations', 'partners', source)
+    return jsonify({"message": "Update completed successfully", "source": source}), 202
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,7 +1,7 @@
 {
   "ANR": {
-    "url_partenaires": "https://www.data.gouv.fr/fr/datasets/r/9b08ee21-7372-47a4-9831-4c56a8099ee8",
-    "url_projets": "https://www.data.gouv.fr/fr/datasets/r/afe3d11b-9ea2-48b0-9789-2816d5785466",
+    "url_partners": "https://www.data.gouv.fr/fr/datasets/r/9b08ee21-7372-47a4-9831-4c56a8099ee8",
+    "url_projects": "https://www.data.gouv.fr/fr/datasets/r/afe3d11b-9ea2-48b0-9789-2816d5785466",
     "cache_structure": "cached_anr_data",
     "nom": "Projet.Partenaire.Responsable_scientifique.Nom",
     "prenom": "Projet.Partenaire.Responsable_scientifique.Prenom",
@@ -28,8 +28,8 @@
     "acronyme": "Projet.Acronyme"
   },
   "ANSES": {
-    "url_partenaires": "https://www.data.gouv.fr/fr/datasets/r/d0b0b666-d997-4ffa-b501-7a3d81dcdf32",
-    "url_projets": "https://www.data.gouv.fr/fr/datasets/r/d6d580fb-9703-4f39-8df2-585e44594091",
+    "url_partners": "https://www.data.gouv.fr/fr/datasets/r/d0b0b666-d997-4ffa-b501-7a3d81dcdf32",
+    "url_projects": "https://www.data.gouv.fr/fr/datasets/r/d6d580fb-9703-4f39-8df2-585e44594091",
     "cache_structure": "cached_anses_data",
     "nom": "Nom Responsable Scientifique",
     "prenom": "Prénom Responsable Scientifique",
@@ -39,7 +39,7 @@
     "region": "",
     "pays": "Pays",
     "code_projet": "code convention homogénéisé",
-    "annee": "Code convention",
+    "annee": "Année",
     "identifiants_preferes_structure": [
       "id_structure_matcher",
       "id_structure_scanr",
@@ -55,10 +55,10 @@
     "acronyme": "Acronyme"
   },
   "IRESP": {
-    "url_partenaires2": "https://www.data.gouv.fr/fr/datasets/r/67744c92-39b9-450c-8f6c-296d47fa90a4",
-    "url_partenaires1": "https://www.data.gouv.fr/fr/datasets/r/ec2623d0-b0e8-4269-a1c8-3d8c361e71ee",
-    "url_projets1": "https://www.data.gouv.fr/fr/datasets/r/82b91478-a09d-4f2c-be1b-1a034b7fa909",
-    "url_projets2": "https://www.data.gouv.fr/fr/datasets/r/bfc1540e-8f6e-427f-bd81-7f89b72f5599",
+    "url_partners2": "https://www.data.gouv.fr/fr/datasets/r/67744c92-39b9-450c-8f6c-296d47fa90a4",
+    "url_partners1": "https://www.data.gouv.fr/fr/datasets/r/ec2623d0-b0e8-4269-a1c8-3d8c361e71ee",
+    "url_projects1": "https://www.data.gouv.fr/fr/datasets/r/82b91478-a09d-4f2c-be1b-1a034b7fa909",
+    "url_projects2": "https://www.data.gouv.fr/fr/datasets/r/bfc1540e-8f6e-427f-bd81-7f89b72f5599",
     "cache_structure": "cached_iresp_data",
     "nom": "Nom",
     "prenom": "Prenom",
@@ -83,8 +83,8 @@
     "acronyme": "Acronyme"
   },
   "SIRANO": {
-    "url_partenaires": "https://www.data.gouv.fr/fr/datasets/r/472569d2-0704-468e-bda0-7665a1f3c33c",
-    "url_projets": "https://www.data.gouv.fr/fr/datasets/r/472569d2-0704-468e-bda0-7665a1f3c33c",
+    "url_partners": "https://www.data.gouv.fr/fr/datasets/r/472569d2-0704-468e-bda0-7665a1f3c33c",
+    "url_projects": "https://www.data.gouv.fr/fr/datasets/r/472569d2-0704-468e-bda0-7665a1f3c33c",
     "cache_structure": "cached_sirano_data",
     "nom": "nom_porteur",
     "prenom": "prenom_porteur",
@@ -108,8 +108,8 @@
     "acronyme": ""
   },
   "REG_IDF": {
-    "url_projets": "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/dim_map_projets_finances/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B",
-    "url_partenaires": "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/dim_map_projets_finances_entites_partenariat/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B",
+    "url_projects": "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/dim_map_projets_finances/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B",
+    "url_partners": "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/dim_map_projets_finances_entites_partenariat/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B",
     "cache_structure": "cached_idf_data",
     "nom_structure": "entite_nom",
     "ville": "entite_commune",
@@ -134,31 +134,5 @@
     "resume_en": "projet_resume-en",
     "budget": "projet_subvention_allouee",
     "acronyme": "projet_acronyme"
-  },
-  "ADEME": {
-    "url_partenaires": "https://data.ademe.fr/data-fair/api/v1/datasets/lm1-9gdjlyxl9n4tka4fzym2/data-files/Projets%20Recherche%20ADEME%20-%20HAL%20CCSD.csv",
-    "url_theses": "https://data.ademe.fr/data-fair/api/v1/datasets/theses-financees-par-l'ademe-de-2005-a-2020/data-files/Theses ADEME 2005-2020.csv",
-    "cache_structure": "cached_ademe_data",
-    "nom_structure": "Organisme du porteur",
-    "ville": "",
-    "pays": "",
-    "region": "",
-    "adresse": "",
-    "code_projet": "RÃ©fÃ©rence du projet",
-    "annee": "annee",
-    "identifiants_preferes_structure": [
-      "SIRET du porteur",
-      "id_structure_matcher",
-      "id_structure_scanr",
-      "code"
-    ],
-    "identifiants_preferes_personne": [],
-    "id_ORCID": "",
-    "titre_fr": "Titre du projet",
-    "titre_en": "",
-    "resume_fr": "",
-    "resume_en": "",
-    "budget": "",
-    "acronyme": "Acronyme de l'appel Ã  projet"
   }
 }

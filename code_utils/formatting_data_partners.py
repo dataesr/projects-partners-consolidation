@@ -32,12 +32,12 @@ def formatting_partners_data(sources, source):
     print(f"There is no duplicated id :{len(df_partners[df_partners.duplicated(subset=['id'])])==0}")
     return df_partners
 
-def filter_new_partners(df_partners):
-    nbr_page=int(requests.get('http://185.161.45.213/projects/participations?where={"project_type":"ANR"}&projection={"id":1}&max_results=500&page=1', headers={"Authorization":Authorization}).json()['hrefs']['last']['href'].split('page=')[1])
+def filter_new_partners(df_partners, source):
+    nbr_page=int(requests.get('http://185.161.45.213/projects/participations?where={"project_type":"'+str(source)+'"}&projection={"id":1}&max_results=500&page=1', headers={"Authorization":Authorization}).json()['hrefs']['last']['href'].split('page=')[1])
     list_ids=[]
     for i in range(1,nbr_page+1):
         print("page",i)
-        page=requests.get('http://185.161.45.213/projects/participations?where={"project_type":"ANR"}&projection={"id":1}&max_results=500'+f"&page={i}", headers={"Authorization":Authorization}).json()
+        page=requests.get('http://185.161.45.213/projects/participations?where={"project_type":"'+str(source)+'"}&projection={"id":1}&max_results=500'+f"&page={i}", headers={"Authorization":Authorization}).json()
         for k in range(len(page['data'])):
             print("k",k)
             list_ids.append(page['data'][k]['id'])    

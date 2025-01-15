@@ -28,17 +28,28 @@ def send_data(df, url):
             pp.pprint(e)
 
 #if we only need to update the new projects or partners
-def send_only_newer_data(df, url, type):
+def send_only_newer_data(df, url, type, source):
     if type == 'projects' :
-        send_data(filter_new_projects(df), url)
+        df_filtered=filter_new_projects(df, source)
+        if len(df_filtered[0])!=0:
+            print(len(df_filtered[0]))
+            send_data(df_filtered[0], url)
+            print(f"Add {len(df_filtered)} new projects successfully")
+        else:
+            print(f"No updates yet for {source}")
     else:
-        send_data(filter_new_partners(df), url)
+        df_filtered=filter_new_partners(df, source)
+        if len(df_filtered[0])>0:
+            send_data(df_filtered[0], url)
+            print(f"Add {len(df_filtered[0])} new partners succesfully")
+        else:
+            print(f"No updates yet for {source}")
 
 #if we only need to make changes to specific features within projects
 def edit_projects():
     print("faut que je demande quels champs changent d'une maj a une autre")
 
 #if we only need to make changes to specific features within partners
-def edit_projects():
+def edit_partners():
     print("faut que je demande quels champs changent d'une maj a une autre")
 
