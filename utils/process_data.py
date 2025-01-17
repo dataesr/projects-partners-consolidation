@@ -4,10 +4,10 @@ import pandas as pd
 import requests 
 from tqdm import tqdm
 
-from code_utils.cached_data_handler import get_structure, get_person
-from code_utils.id_from_orcid import orcid_to_idref
-from code_utils.pickle import load_cache, write_cache
-from code_utils.utils import get_id,replace_all, get_scanR_structure
+from utils.cached_data_handler import get_structure, get_person
+from utils.id_from_orcid import orcid_to_idref
+from utils.pickle import load_cache, write_cache
+from utils.utils import get_id,replace_all, get_scanR_structure
 
 load_dotenv()
 tqdm.pandas()
@@ -38,12 +38,12 @@ def cache(source):
 def get_data(sources,source):
     try:
         if source=='ANR':
-            page_partenaires_10 = requests.get(sources[source]['url_partenaires']).json()
+            page_partenaires_10 = requests.get(sources[source]['url_partners']).json()
             colonnes_partenaires_10 = page_partenaires_10['columns']
             donnees_partenaires_10 = page_partenaires_10['data']
             df_partners=pd.DataFrame(data=donnees_partenaires_10,columns=colonnes_partenaires_10)
         elif source=='ANSES':
-            df_from_anses=pd.read_excel(sources[source]['url_partenaires'])
+            df_from_anses=pd.read_excel(sources[source]['url_partners'])
             df=df_from_anses.iloc[1:,:]
             df.columns=list(df_from_anses.iloc[0,:])
             dict_equipe={list(df_from_anses.columns)[k].replace('Équipe 10 ','Équipe 10').replace('Équipe13','Équipe 13'):k for k in range (len(list(df_from_anses.columns))) if list(df_from_anses.columns)[k].find('Équipe')>=0}
@@ -55,13 +55,13 @@ def get_data(sources,source):
                 number+=6
             df_partners=pd.concat([list_df[k].dropna(subset=[sources[source]['nom'], sources[source]['prenom'],sources[source]['nom_structure'], sources[source]['nom'], 'Pays'], how='all') for k in range(len(list_df))]) 
         elif source=='IRESP':
-            df_partners1=pd.read_csv(sources[source]['url_partenaires1'] ,sep=";", encoding='UTF-8')
-            df_partners2=pd.read_csv(sources[source]['url_partenaires2'] ,sep=";", encoding='UTF-8')
+            df_partners1=pd.read_csv(sources[source]['url_partners1'] ,sep=";", encoding='UTF-8')
+            df_partners2=pd.read_csv(sources[source]['url_partners2'] ,sep=";", encoding='UTF-8')
             df_partners=pd.concat([df_partners1,df_partners2])
         elif source=='ADEME':
-            df_partners=pd.read_csv(sources[source]['url_partenaires'] ,sep=",", encoding='ISO-8859-1', on_bad_lines='skip')
+            df_partners=pd.read_csv(sources[source]['url_partners'] ,sep=",", encoding='ISO-8859-1', on_bad_lines='skip')
         else:    
-            df_partners=pd.read_csv(sources[source]['url_partenaires'] ,sep=";", encoding='ISO-8859-1')
+            df_partners=pd.read_csv(sources[source]['url_partners'] ,sep=";", encoding='ISO-8859-1')
         df_partners=df_partners.reset_index()
         del df_partners['index']
         print(df_partners.head())

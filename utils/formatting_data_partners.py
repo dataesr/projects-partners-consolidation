@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import requests
 
-from code_utils.features_into_dictionnary import address
+from utils.features_into_dictionnary import address
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')

@@ -4,8 +4,8 @@ import requests
 
 from dotenv import load_dotenv
 
-from code_utils.formatting_data_partners import filter_new_partners
-from code_utils.formatting_data_projects import filter_new_projects
+from utils.formatting_data_partners import filter_new_partners
+from utils.formatting_data_projects import filter_new_projects
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')
