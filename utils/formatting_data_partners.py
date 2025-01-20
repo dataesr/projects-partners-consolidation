@@ -19,7 +19,7 @@ def formatting_partners_data(sources, source):
     df_partners['address']=df_partners.apply(lambda row: address(row,sources[source]['pays'],sources[source]['ville'],source), axis=1)
     df_partners.loc[:,'id_structure']=df_partners.loc[:,'id_structure'].apply(lambda x: x[0] if isinstance(x,list) else x )
     if source in ['ANSES','SIRANO']:
-        df_partners['id']=df_partners.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[{sources[source]['nom_structure']}+'2']}-{row[sources[source]['nom']]}-{row[sources[source]['prenom']]}" , axis=1)
+        df_partners['id']=df_partners.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[str(sources[source]['nom_structure'])+'2']}-{row[sources[source]['nom']]}-{row[sources[source]['prenom']]}" , axis=1)
     if source =='REG_IDF':
         df_partners['id']=df_partners.apply(lambda row: f"{row[sources[source]['code_projet']]}-{row[str(sources[source]['nom_structure'])+'2']}-{row['entite_role']}" , axis=1)
     df_partners['address']=df_partners.apply(lambda row: address(row,sources[source]['pays'],sources[source]['ville'],source), axis=1)
@@ -41,7 +41,7 @@ def filter_new_partners(df_partners, source):
         for k in range(len(page['data'])):
             print("k",k)
             list_ids.append(page['data'][k]['id'])    
-    projets_a_ajouter=[x for x in list(df_partners['id'].drop_duplicates()) if x not in list(pd.Series(list_ids).drop_duplicates())]
-    projets_a_retirer=[x for x in list_ids if x not in list(df_partners['id'])]
-    df_partners = df_partners[df_partners['id'].apply(lambda x: x in projets_a_ajouter)]
-    return df_partners
+    partners_to_add=[x for x in list(df_partners['id'].drop_duplicates()) if x not in list(pd.Series(list_ids).drop_duplicates())]
+    partners_to_remove=[x for x in list_ids if x not in list(df_partners['id'])]
+    df_partners = df_partners[df_partners['id'].apply(lambda x: x in partners_to_add)]
+    return df_partners, partners_to_add, partners_to_remove

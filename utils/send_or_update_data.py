@@ -39,6 +39,7 @@ def send_only_newer_data(df, url, type, source):
             print(f"No updates yet for {source}")
     else:
         df_filtered=filter_new_partners(df, source)
+        print(len(df_filtered[0]))
         if len(df_filtered[0])>0:
             send_data(df_filtered[0], url)
             print(f"Add {len(df_filtered[0])} new partners succesfully")
