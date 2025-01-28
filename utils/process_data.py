@@ -6,8 +6,11 @@ from tqdm import tqdm
 
 from utils.cached_data_handler import get_structure, get_person
 from utils.id_from_orcid import orcid_to_idref
+from utils.logger import get_logger
 from utils.pickle import load_cache, write_cache
 from utils.utils import get_id,replace_all, get_scanR_structure
+
+logger = get_logger(__name__)
 
 load_dotenv()
 tqdm.pandas()
@@ -66,8 +69,10 @@ def get_data(sources,source):
         del df_partners['index']
         print(df_partners.head())
         print(f"OK: {source} data have been successfully loaded - process_data (1/6)")
+        logger.debug(f"OK: {source} data have been successfully loaded - process_data (1/6)")
     except Exception as e:
         print(f"ERROR: {source} data have not been loaded", e)
+        logger.debug(f"ERROR: {source} data have not been loaded", e)
         return None
     return df_partners
 
@@ -89,8 +94,10 @@ def get_id_structure(df_partners, source, sources, cached_data):
         df_partners_struct=pd.merge(df_partners,id_struct[[f"{sources[source]['nom_structure']}2",'id_structure_matcher']], on=f"{sources[source]['nom_structure']}2", how='left')
         print(df_partners_struct.head(), df_partners_struct.columns)
         print(f"OK: The matcher worked successfully on {source} structures - process_data (2/6)")
+        logger.debug(f"OK: The matcher worked successfully on {source} structures - process_data (2/6)")
     except Exception as e:
         print(f"ERROR: The matcher didn't work on {source} structures", e)
+        logger.debug(f"ERROR: The matcher didn't work on {source} structures", e)
         return None
     #find other identifiers with scanR
     try:
@@ -112,8 +119,10 @@ def get_id_structure(df_partners, source, sources, cached_data):
         df_partners_struct=pd.merge(df_partners_struct,scanR_nettoye, on=f"{sources[source]['nom_structure']}2", how='left')
         print(df_partners_struct.head(), df_partners_struct.columns)
         print(f"OK: The ids from scanR are successfully added to {source} structures - process_data (3/6)")
+        logger.debug(f"OK: The ids from scanR are successfully added to {source} structures - process_data (3/6)")
     except Exception as e:
         print(f"ERROR: The ids from scanR are not added to {source} structures", e)
+        logger.debug(f"ERROR: The ids from scanR are not added to {source} structures", e)
         return None
     #file with structure identifiers found manually ==> 'code'
     try:
@@ -129,8 +138,10 @@ def get_id_structure(df_partners, source, sources, cached_data):
         df_partners_all_structure_id.to_json(f"./DATA/{source}/df_partners_id_structures.json")
         print(df_partners_all_structure_id.head(), df_partners_all_structure_id.columns)
         print(f"OK: The ids from the file with structure identifiers are successfully added to {source} structures - process_data (4/6)")
+        logger.debug(f"OK: The ids from the file with structure identifiers are successfully added to {source} structures - process_data (4/6)")
     except Exception as e:
         print(f"ERROR: The ids from the file with structure identifiers are not added to {source} structures", e)
+        logger.debug(f"ERROR: The ids from the file with structure identifiers are not added to {source} structures", e)
         return None
     #save the structures without any id
     try:
@@ -141,8 +152,10 @@ def get_id_structure(df_partners, source, sources, cached_data):
         identifiants_a_remplir.to_excel(f"./missing_ids_structures/partenaires_non_identifies_{source}.xlsx", index=False)
         print(df_partners_all_structure_id.head(), df_partners_all_structure_id.columns)
         print(f"OK: The missing ids are successfully added to the folder 'missing_id_structures' - process_data (5/6)")
+        logger.debug(f"OK: The missing ids are successfully added to the folder 'missing_id_structures' - process_data (5/6)")
     except Exception as e:
         print(f"ERROR: The missing ids are not added to the folder 'missing_id_structures'", e)
+        logger.debug(f"ERROR: The missing ids are not added to the folder 'missing_id_structures'", e)
         return None
     return df_partners_all_structure_id 
 
@@ -160,8 +173,10 @@ def get_id_person(df_partners_complete, source, sources, cached_data_persons, ca
                 df_partners_complete.to_json(f"./DATA/{source}/df_partners_id_person.json")
         print(df_partners_complete.head(), df_partners_complete.columns)
         print(f"OK: The matcher worked successfully on {source} persons - process_data (6/6)")
+        logger.debug(f"OK: The matcher worked successfully on {source} persons - process_data (6/6)")
     except Exception as e:
         print(f"ERROR: The matcher didn't work on {source} persons", e)
+        logger.debug(f"ERROR: The matcher didn't work on {source} persons", e)
         return None
     return df_partners_complete
 
