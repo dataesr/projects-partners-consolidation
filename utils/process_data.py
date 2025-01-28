@@ -117,11 +117,8 @@ def get_id_structure(df_partners, source, sources, cached_data):
         scanR_nettoye=scanR_nettoye[['id_structure_scanr',f"{sources[source]['nom_structure']}2"]]
         scanR_nettoye=scanR_nettoye.drop_duplicates(subset=f"{sources[source]['nom_structure']}2")
         df_partners_struct=pd.merge(df_partners_struct,scanR_nettoye, on=f"{sources[source]['nom_structure']}2", how='left')
-        print(df_partners_struct.head(), df_partners_struct.columns)
-        print(f"OK: The ids from scanR are successfully added to {source} structures - process_data (3/6)")
         logger.debug(f"OK: The ids from scanR are successfully added to {source} structures - process_data (3/6)")
     except Exception as e:
-        print(f"ERROR: The ids from scanR are not added to {source} structures", e)
         logger.debug(f"ERROR: The ids from scanR are not added to {source} structures", e)
         return None
     #file with structure identifiers found manually ==> 'code'
@@ -136,11 +133,8 @@ def get_id_structure(df_partners, source, sources, cached_data):
             df_partners_all_structure_id=pd.merge(df_partners_all_structure_id,finess_siret,how='left', on='finess')
         df_partners_all_structure_id['id_structure']=df_partners_all_structure_id.apply(lambda row: get_id(row,sources[source]['identifiants_preferes_structure']), axis=1)
         df_partners_all_structure_id.to_json(f"./DATA/{source}/df_partners_id_structures.json")
-        print(df_partners_all_structure_id.head(), df_partners_all_structure_id.columns)
-        print(f"OK: The ids from the file with structure identifiers are successfully added to {source} structures - process_data (4/6)")
         logger.debug(f"OK: The ids from the file with structure identifiers are successfully added to {source} structures - process_data (4/6)")
     except Exception as e:
-        print(f"ERROR: The ids from the file with structure identifiers are not added to {source} structures", e)
         logger.debug(f"ERROR: The ids from the file with structure identifiers are not added to {source} structures", e)
         return None
     #save the structures without any id
@@ -150,11 +144,8 @@ def get_id_structure(df_partners, source, sources, cached_data):
         identifiants_a_remplir=identifiants_a_remplir.reset_index()
         del identifiants_a_remplir['index']
         identifiants_a_remplir.to_excel(f"./missing_ids_structures/partenaires_non_identifies_{source}.xlsx", index=False)
-        print(df_partners_all_structure_id.head(), df_partners_all_structure_id.columns)
-        print(f"OK: The missing ids are successfully added to the folder 'missing_id_structures' - process_data (5/6)")
         logger.debug(f"OK: The missing ids are successfully added to the folder 'missing_id_structures' - process_data (5/6)")
     except Exception as e:
-        print(f"ERROR: The missing ids are not added to the folder 'missing_id_structures'", e)
         logger.debug(f"ERROR: The missing ids are not added to the folder 'missing_id_structures'", e)
         return None
     return df_partners_all_structure_id 
@@ -171,11 +162,8 @@ def get_id_person(df_partners_complete, source, sources, cached_data_persons, ca
                 df_partners_complete.to_json(f"./DATA/{source}/df_partners_id_person_ORCID.json")
             else:
                 df_partners_complete.to_json(f"./DATA/{source}/df_partners_id_person.json")
-        print(df_partners_complete.head(), df_partners_complete.columns)
-        print(f"OK: The matcher worked successfully on {source} persons - process_data (6/6)")
         logger.debug(f"OK: The matcher worked successfully on {source} persons - process_data (6/6)")
     except Exception as e:
-        print(f"ERROR: The matcher didn't work on {source} persons", e)
         logger.debug(f"ERROR: The matcher didn't work on {source} persons", e)
         return None
     return df_partners_complete

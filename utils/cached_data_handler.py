@@ -4,7 +4,10 @@ from retry import retry
 import os
 from dotenv import load_dotenv
 
+from utils.logger import get_logger
+
 load_dotenv()
+logger = get_logger(__name__)
 
 #urls
 url='https://affiliation-matcher.staging.dataesr.ovh/match'
@@ -47,11 +50,14 @@ def get_structure(row,source,cached_data,nom_structure,pays=False,ville=False,co
             cached_data[row[nom_structure]]=None
 
 #get the structure id from the structure name
-@retry(delay=200, tries=30000)
+#@retry(delay=200, tries=30000)
 def get_person(row, cached_data_persons,prenom,nom):
+    logger.debug(f"{row[prenom]} {row[nom]}")
     if f"{row[prenom]} {row[nom]}" in list(cached_data_persons.keys()):
+        logger.debug('cache')        
         return cached_data_persons[f"{row[prenom]} {row[nom]}"]
     else:
+        logger.debug('pydref')        
         pydref = Pydref()
         result = pydref.identify(f"{row[prenom]} {row[nom]}")
         if result['status']=='found' and result['idref']!='idref073954012':
