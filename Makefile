@@ -12,7 +12,7 @@ unit: start
 start: stop
 	@echo Affiliation matcher starting...
 	docker compose up -d
-	@echo Affiliation matcher started http://localhost:5004
+	@echo Affiliation matcher started http://localhost:5000
 
 stop:
 	@echo Affiliation matcher stopping...
