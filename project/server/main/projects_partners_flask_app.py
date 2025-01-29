@@ -1,11 +1,11 @@
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
 
-from utils.formatting_data_partners import formatting_partners_data
-from utils.formatting_data_projects import formatting_projects_data
-from utils.logger import get_logger
-from utils.process_data import cache, get_data, get_id_structure, get_id_person
-from utils.send_or_update_data import send_data, send_only_newer_data
+from project.server.main.formatting_data_partners import formatting_partners_data
+from project.server.main.formatting_data_projects import formatting_projects_data
+from project.server.main.logger import get_logger
+from project.server.main.process_data import cache, get_data, get_id_structure, get_id_person
+from project.server.main.send_or_update_data import send_data, send_only_newer_data
 
 app=Flask(__name__)
 logger = get_logger(__name__)

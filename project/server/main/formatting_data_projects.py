@@ -4,8 +4,8 @@ import os
 import pandas as pd
 import requests
 
-from utils.features_into_dictionnary import persons, projects
-from utils.utils import get_id
+from project.server.main.features_into_dictionnary import persons, projects
+from project.server.main.utils import get_id
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')
