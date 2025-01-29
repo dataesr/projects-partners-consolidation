@@ -11,6 +11,10 @@ app=Flask(__name__)
 logger = get_logger(__name__)
 sources=pd.read_json('sources.json')
 
+@app.route('/', methods=['GET'])
+def home():
+    return "Bonjour"
+
 @app.route('/process', methods=['GET'])
 def process_data():
     try:
