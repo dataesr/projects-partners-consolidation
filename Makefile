@@ -1,4 +1,4 @@
-CURRENT_VERSION=$(shell cat project/__init__.py | cut -d "'" -f 2)
+CURRENT_VERSION=$(shell cat ./__init__.py | cut -d "'" -f 2)
 DOCKER_IMAGE_NAME=dataesr/projects_partners_consolidation
 GHCR_IMAGE_NAME=ghcr.io/$(DOCKER_IMAGE_NAME)
 
