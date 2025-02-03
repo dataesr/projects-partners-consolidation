@@ -4,11 +4,12 @@ import requests
 
 from dotenv import load_dotenv
 
-from project.server.main.formatting_data_partners import filter_new_partners
-from project.server.main.formatting_data_projects import filter_new_projects
+from formatting_data_partners import filter_new_partners
+from formatting_data_projects import filter_new_projects
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')
+
 
 #if it is a new source of data
 def send_data(df, url):

@@ -3,9 +3,10 @@ import numpy as np
 import os
 import pandas as pd
 import requests
+import sys
 
-from project.server.main.features_into_dictionnary import persons, projects
-from project.server.main.utils import get_id
+from features_into_dictionnary import persons, projects
+from utils import get_id
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')

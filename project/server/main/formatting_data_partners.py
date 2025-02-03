@@ -3,8 +3,9 @@ import numpy as np
 import os
 import pandas as pd
 import requests
+import sys
 
-from project.server.main.features_into_dictionnary import address
+from features_into_dictionnary import address
 
 load_dotenv()
 Authorization = os.getenv('Authorization_access_185')

@@ -4,11 +4,11 @@ import pandas as pd
 import requests 
 from tqdm import tqdm
 
-from project.server.main.cached_data_handler import get_structure, get_person
-from project.server.main.id_from_orcid import orcid_to_idref
-from project.server.main.logger import get_logger
-from project.server.main.pickle import load_cache, write_cache
-from project.server.main.utils import get_id,replace_all, get_scanR_structure
+from cached_data_handler import get_structure, get_person
+from id_from_orcid import orcid_to_idref
+from logger import get_logger
+from my_pickle import load_cache, write_cache
+from utils import get_id,replace_all, get_scanR_structure
 
 logger = get_logger(__name__)
 
