@@ -1,5 +1,5 @@
-CURRENT_VERSION=$(shell cat .project/server/__init__.py | cut -d "'" -f 2)
-DOCKER_IMAGE_NAME=dataesr/projects_partners_consolidation
+CURRENT_VERSION=$(shell cat ./project/server/__init__.py | cut -d "'" -f 2)
+DOCKER_IMAGE_NAME=dataesr/projects-partners-consolidation
 GHCR_IMAGE_NAME=ghcr.io/$(DOCKER_IMAGE_NAME)
 
 test: unit

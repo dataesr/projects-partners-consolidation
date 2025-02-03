@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . /app/
 RUN pip install -r requirements.txt
 EXPOSE 5000
-CMD ["python", "projects_partners_flask_app.py"]
+CMD ["python", "./project/server/main/projects_partners_flask_app.py"]
