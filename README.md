@@ -14,6 +14,7 @@ Run the notebook with all the details of the code, step by step. When using the 
 
 - In an IDE, execute: `python projects_partners_flask_app.py`
 - Then, execute the process at `http://127.0.0.1:5000/process?source=` + the data source (ex: ANR, ANSES...).
+  - example: `http://127.0.0.1:5000/process?source=ANSES`
 - When the process is over, you can update the new projects or partners with:
   ### 1. update the projects with the link:
   - `http://127.0.0.1:5000/update/project?source=` + the data source (ex: ANR, ANSES...)
@@ -24,4 +25,12 @@ Run the notebook with all the details of the code, step by step. When using the 
 
 ### 3. Run the Flask application remotely
 
-- blabla
+- Execute the process online at `https://projects-partners-consolidation.staging.dataesr.ovh/process?source=` + the data source (ex: ANR, ANSES...).
+  - example: `https://projects-partners-consolidation.staging.dataesr.ovh/process?source=ANSES`
+- When the process is over, you can update the new projects or partners with:
+  ### 1. update the projects with the link:
+  - `https://projects-partners-consolidation.staging.dataesr.ovh/update/project?source=` + the data source (ex: ANR, ANSES...)
+    - example: `https://projects-partners-consolidation.staging.dataesr.ovh/update/project?source=ANSES`
+  ### 2. update the partners
+  - `https://projects-partners-consolidation.staging.dataesr.ovh/update/partner?source=` + the data source (ex: ANR, ANSES...)
+    - example: `https://projects-partners-consolidation.staging.dataesr.ovh/update/partner?source=ANSES`
