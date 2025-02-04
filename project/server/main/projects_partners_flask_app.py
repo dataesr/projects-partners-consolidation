@@ -13,7 +13,7 @@ sources=pd.read_json('sources.json')
 
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({"message": "Choisir quels projets ou partneraies mettre à jour"}), 202
+    return jsonify({"message": "Choisir quels projets ou partenaires mettre à jour"}), 202
 
 @app.route('/process', methods=['GET'])
 def process_data():
