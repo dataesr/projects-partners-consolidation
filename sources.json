@@ -134,5 +134,33 @@
     "resume_en": "projet_resume-en",
     "budget": "projet_subvention_allouee",
     "acronyme": "projet_acronyme"
+  },
+  "INOV": {
+    "url_partners": "https://www.data.gouv.fr/fr/datasets/r/9b08ee21-7372-47a4-9831-4c56a8099ee8",
+    "url_projects": "https://www.data.gouv.fr/fr/datasets/r/afe3d11b-9ea2-48b0-9789-2816d5785466",
+    "cache_structure": "cached_anr_data",
+    "nom": "Projet.Partenaire.Responsable_scientifique.Nom",
+    "prenom": "Projet.Partenaire.Responsable_scientifique.Prenom",
+    "nom_structure": "Projet.Partenaire.Nom_organisme",
+    "adresse": "",
+    "ville": "Projet.Partenaire.Adresse.Ville",
+    "region": "",
+    "pays": "Projet.Partenaire.Adresse.Pays",
+    "code_projet": "Projet.Code_Decision_ANR",
+    "annee": "AAP.Edition",
+    "identifiants_preferes_structure": [
+      "Projet.Partenaire.Code_RNSR",
+      "id_structure_matcher",
+      "id_structure_scanr",
+      "code"
+    ],
+    "identifiants_preferes_personne": ["id_personne", "idref_ORCID"],
+    "id_ORCID": "Projet.Partenaire.Responsable_scientifique.ORCID",
+    "titre_fr": "Projet.Titre.Francais",
+    "titre_en": "Projet.Titre.Anglais",
+    "resume_fr": "Projet.Resume.Francais",
+    "resume_en": "Projet.Resume.Anglais",
+    "budget": "Projet.Montant.AF.Aide_allouee.ANR",
+    "acronyme": "Projet.Acronyme"
   }
 }

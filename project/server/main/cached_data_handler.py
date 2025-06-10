@@ -1,5 +1,5 @@
 import requests
-from Pydref import Pydref
+from project.server.main.Pydref import Pydref
 from retry import retry
 import os
 from dotenv import load_dotenv
@@ -47,7 +47,7 @@ def get_structure(row,source,cached_data,nom_structure,pays=False,ville=False,co
             cached_data[row[nom_structure]]=None
 
 #get the structure id from the structure name
-#@retry(delay=200, tries=30000)
+@retry(delay=200, tries=30000)
 def get_person(row, cached_data_persons,prenom,nom):
     if f"{row[prenom]} {row[nom]}" in list(cached_data_persons.keys()):
         return cached_data_persons[f"{row[prenom]} {row[nom]}"]
