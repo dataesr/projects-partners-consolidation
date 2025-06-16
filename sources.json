@@ -80,7 +80,8 @@
     "resume_fr": "Resume",
     "resume_en": "Abstract",
     "budget": "Montant_financement",
-    "acronyme": "Acronyme"
+    "acronyme": "Acronyme",
+    "annee": "Annee"
   },
   "SIRANO": {
     "url_partners": "https://www.data.gouv.fr/fr/datasets/r/472569d2-0704-468e-bda0-7665a1f3c33c",
@@ -136,31 +137,30 @@
     "acronyme": "projet_acronyme"
   },
   "INOV": {
-    "url_partners": "https://www.data.gouv.fr/fr/datasets/r/9b08ee21-7372-47a4-9831-4c56a8099ee8",
-    "url_projects": "https://www.data.gouv.fr/fr/datasets/r/afe3d11b-9ea2-48b0-9789-2816d5785466",
-    "cache_structure": "cached_anr_data",
-    "nom": "Projet.Partenaire.Responsable_scientifique.Nom",
-    "prenom": "Projet.Partenaire.Responsable_scientifique.Prenom",
-    "nom_structure": "Projet.Partenaire.Nom_organisme",
+    "url_partners": "",
+    "cache_structure": "cached_inov_data",
+    "nom": "NomContact",
+    "prenom": "PrenomContact",
+    "nom_structure": "Entreprise",
     "adresse": "",
-    "ville": "Projet.Partenaire.Adresse.Ville",
+    "ville": "",
     "region": "",
-    "pays": "Projet.Partenaire.Adresse.Pays",
-    "code_projet": "Projet.Code_Decision_ANR",
-    "annee": "AAP.Edition",
+    "pays": "",
+    "code_projet": "",
+    "annee": "annee",
     "identifiants_preferes_structure": [
-      "Projet.Partenaire.Code_RNSR",
+      "siret",
       "id_structure_matcher",
       "id_structure_scanr",
       "code"
     ],
-    "identifiants_preferes_personne": ["id_personne", "idref_ORCID"],
-    "id_ORCID": "Projet.Partenaire.Responsable_scientifique.ORCID",
-    "titre_fr": "Projet.Titre.Francais",
-    "titre_en": "Projet.Titre.Anglais",
-    "resume_fr": "Projet.Resume.Francais",
-    "resume_en": "Projet.Resume.Anglais",
-    "budget": "Projet.Montant.AF.Aide_allouee.ANR",
-    "acronyme": "Projet.Acronyme"
+    "identifiants_preferes_personne": ["id_personne"],
+    "id_ORCID": "",
+    "titre_fr": "moto",
+    "titre_en": "",
+    "resume_fr": "ProjetResume",
+    "resume_en": "",
+    "budget": "Subvention",
+    "acronyme": "Projet"
   }
 }
