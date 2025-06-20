@@ -138,6 +138,12 @@ def extract_first_name(x):
         return prenom
     else:
         return ''
+    
+#get the string without '"'
+def strip_outer_quotes(val):
+    if isinstance(val, str) and val.startswith('"') and val.endswith('"'):
+        return val[1:-1]
+    return val
 
 
 
