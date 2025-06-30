@@ -30,7 +30,8 @@
     "keyword_projects1": "anr-dos-depuis-2010-projets",
     "keyword_projects2": "projets.json",
     "keyword_partners1": "anr-dos-depuis-2010-projets",
-    "keyword_partners2": "partenaires.json"
+    "keyword_partners2": "partenaires.json",
+    "id_partenaire": "Projet.Partenaire.Code_Decision_ANR"
   },
   "ANSES": {
     "url_partners": "https://www.data.gouv.fr/fr/datasets/r/26d918d0-f789-4f81-b9f2-2c6b8b4f7831",
@@ -62,13 +63,14 @@
     "keyword_projects1": "Projets-financés-depuis-2006-projets",
     "keyword_projects2": ".xlsx",
     "keyword_partners1": "Projets-financés-depuis-2006-partenaires",
-    "keyword_partners2": ".xlsx"
+    "keyword_partners2": ".xlsx",
+    "id_partenaire": "id"
   },
   "IRESP": {
     "url_partners2": "https://www.data.gouv.fr/fr/datasets/r/67744c92-39b9-450c-8f6c-296d47fa90a4",
-    "url_partners1": "https://www.data.gouv.fr/fr/datasets/r/ec2623d0-b0e8-4269-a1c8-3d8c361e71ee",
-    "url_projects1": "https://www.data.gouv.fr/fr/datasets/r/82b91478-a09d-4f2c-be1b-1a034b7fa909",
-    "url_projects2": "https://www.data.gouv.fr/fr/datasets/r/bfc1540e-8f6e-427f-bd81-7f89b72f5599",
+    "url_partners1": "https://www.data.gouv.fr/fr/datasets/r/5ba5f4ed-de39-40f7-88d8-97709a0cd1f8",
+    "url_projects1": "https://www.data.gouv.fr/fr/datasets/r/50b6f01f-6141-4a07-b765-8946730f8165",
+    "url_projects2": "https://www.data.gouv.fr/fr/datasets/r/82b91478-a09d-4f2c-be1b-1a034b7fa909",
     "cache_structure": "cached_iresp_data",
     "nom": "Nom",
     "prenom": "Prenom",
@@ -92,7 +94,8 @@
     "budget": "Montant_financement",
     "acronyme": "Acronyme",
     "annee": "Annee",
-    "id": "6666cabc773c396370465d3d"
+    "id": "6666cabc773c396370465d3d",
+    "id_partenaire": "ID_Partenaire"
   },
   "SIRANO": {
     "url_partners": "https://www.data.gouv.fr/fr/datasets/r/472569d2-0704-468e-bda0-7665a1f3c33c",
@@ -118,7 +121,8 @@
     "resume_en": "",
     "budget": "financement_total",
     "acronyme": "",
-    "id": "534fff94a3a7292c64a77fc1"
+    "id": "534fff94a3a7292c64a77fc1",
+    "id_partenaire": "id"
   },
   "REG_IDF": {
     "url_projects": "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/dim_map_projets_finances/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B",
