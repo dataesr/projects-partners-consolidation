@@ -145,7 +145,15 @@ def strip_outer_quotes(val):
         return val[1:-1]
     return val
 
-
+#get the budget cleaned
+def clean_budget(x):
+    x_str = str(x).replace(' ', '').replace('€', '').replace('\x80', '').replace(',', '.')
+    if x_str.find('.')!=-1 and x_str.split('.')[-1]!='0' and x_str.split('.')[-1]!='00':
+        return float(x_str)
+    elif x_str=='nan':
+        return None
+    else:
+        return int(x_str.replace('.0','').replace('.00',''))
 
 
 

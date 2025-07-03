@@ -1,5 +1,7 @@
 import pandas as pd
 from flask import Flask, request, jsonify, render_template
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 
 from formatting_data_partners import formatting_partners_data
 from formatting_data_projects import formatting_projects_data
@@ -63,6 +65,21 @@ def update_partners():
     df_projects=formatting_partners_data(sources, source)
     send_only_newer_data(df_projects, 'http://185.161.45.213/projects/participations', 'partners', source)
     return jsonify({"message": "Update completed successfully", "source": source}), 202
+
+@app.route('/update/monthly', methods=['GET','POST']) 
+def update_ANR_monthly():
+    with app.app_context():
+        source = 'ANR'
+        df_projects = formatting_projects_data(sources, source)
+        send_only_newer_data(df_projects, 'http://185.161.45.213/projects/projects', 'projects', source)
+        df_partners = formatting_partners_data(sources, source)
+        send_only_newer_data(df_partners, 'http://185.161.45.213/projects/participations', 'partners', source)
+        return jsonify({"message":"Monthly update for ANR done", "source": source}), 202
+    #peut etre faire une fonction en dehors de la route flask
+scheduler = BackgroundScheduler()
+scheduler.add_job(update_ANR_monthly, 'cron', day=1, hour=3, minute=0)  # first day of the month at 3a.m.
+scheduler.start()
+atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

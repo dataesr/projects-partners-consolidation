@@ -32,7 +32,7 @@ def projects(row,champ_fr,champ_en):
 #get a dictionnary for structures localisation like : {"city": "the city of the structure", "country": "the country of the structure"}
 def address(row,pays,ville,source):
     if source == 'SIRANO':
-        return {"city": "France"}
+        return {"country": "France"}
     else:
         if (pd.isna(row[ville])==False)&(pd.isna(row[pays])==False):
             return {"city": row[ville], "country": row[pays]}
