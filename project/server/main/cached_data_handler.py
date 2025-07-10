@@ -12,31 +12,33 @@ url_cluster = os.getenv('url_cluster')
 
 #get the structure id from the structure name
 @retry(delay=200, tries=30000)
-def get_structure(row,source,cached_data,nom_structure,pays=False,ville=False,code_projet=False,annee=False):
+def get_structure(row,source,cached_data,nom_structure,pays,ville,code_projet,annee_input):
     if row[nom_structure] in list(cached_data.keys()):
         pass
     else:
         url='https://affiliation-matcher.staging.dataesr.ovh/match'
         f= ' '.join([str(row[y]) for y in [x for x in [nom_structure,ville,pays] if x in list(row.keys())]])
+        print(f)
         if source=='REG_IDF':
             rnsr=requests.post(url, json= {"type":"rnsr",
                                            "year":str(row[code_projet].split('-')[3]),
                                            "query":f,"verbose":False})
-        elif (annee == False)&(source not in ['REG_IDF','ADEME']):
+        elif source not in ['REG_IDF','ADEME','SIRANO']:
             rnsr=requests.post(url, json= {"type":"rnsr",
                                            "year":"20"+str(row[code_projet].split('-')[1])[-2:],
                                            "query":f,"verbose":False})
         else:
-            if source=='ADEME':
-                annee=row['Date de dÃ©but du projet'][:4]
+            if source=='SIRANO':
+                annee=row['annee_de_selection']
             else:
-                annee=row[annee]
+                annee=row[annee_input]
             rnsr=requests.post(url, json= {"type":"rnsr","year":str(annee),"query":f,"verbose":False})
         ror=requests.post(url, json= { "query" : f , "type":"ror"})
         grid=requests.post(url, json= { "query" : f , "type":"grid"})
         result_rnsr=rnsr.json()['results']
         result_ror=ror.json()['results']
         result_grid=grid.json()['results'] 
+        print(result_rnsr,result_ror,result_grid)
         if result_rnsr != []:
             cached_data[row[nom_structure]]=result_rnsr
         elif result_rnsr != [] and result_grid != []:

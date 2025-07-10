@@ -8,7 +8,7 @@ from cached_data_handler import get_structure, get_person
 from id_from_orcid import orcid_to_idref
 from logger import get_logger
 from my_pickle import load_cache, write_cache
-from utils import get_id,replace_all, get_scanR_structure
+from utils import get_id,replace_all, get_scanR_structure, strip_outer_quotes, clean_budget
 
 logger = get_logger(__name__)
 
@@ -47,22 +47,12 @@ def get_data(sources,source):
             df_partners=pd.DataFrame(data=donnees_partenaires_10,columns=colonnes_partenaires_10)
         elif source=='ANSES':
             df_from_anses=pd.read_excel(sources[source]['url_partners'])
-            df=df_from_anses.iloc[1:,:]
-            df.columns=list(df_from_anses.iloc[0,:])
-            dict_equipe={list(df_from_anses.columns)[k].replace('Équipe 10 ','Équipe 10').replace('Équipe13','Équipe 13'):k for k in range (len(list(df_from_anses.columns))) if list(df_from_anses.columns)[k].find('Équipe')>=0}
-            list_df=[]
-            number=3
-            for n in range(1,len(dict_equipe)+1):
-                equipe_n=pd.concat([df.iloc[:,0:3],df.iloc[:,number:number+6]], axis=1)
-                list_df.append(equipe_n)
-                number+=6
-            df_partners=pd.concat([list_df[k].dropna(subset=[sources[source]['nom'], sources[source]['prenom'],sources[source]['nom_structure'], sources[source]['nom'], 'Pays'], how='all') for k in range(len(list_df))]) 
+            df_partners=df_from_anses.applymap(strip_outer_quotes)
+            df_partners['annee']=df_partners.apply(lambda row: "20"+str(row[sources[source]['code_projet']].split('-')[1])[-2:], axis=1)
         elif source=='IRESP':
             df_partners1=pd.read_csv(sources[source]['url_partners1'] ,sep=";", encoding='UTF-8')
             df_partners2=pd.read_csv(sources[source]['url_partners2'] ,sep=";", encoding='UTF-8')
             df_partners=pd.concat([df_partners1,df_partners2])
-        elif source=='ADEME':
-            df_partners=pd.read_csv(sources[source]['url_partners'] ,sep=",", encoding='ISO-8859-1', on_bad_lines='skip')
         else:    
             df_partners=pd.read_csv(sources[source]['url_partners'] ,sep=";", encoding='ISO-8859-1')
         df_partners=df_partners.reset_index()
@@ -129,8 +119,14 @@ def get_id_structure(df_partners, source, sources, cached_data):
         scanr_structures=scanr_structures.dropna().drop_duplicates(subset=f"{sources[source]['nom_structure']}2")
         df_partners_all_structure_id=pd.merge(df_partners_struct,scanr_structures, on=f"{sources[source]['nom_structure']}2", how='left')
         if 'finess' in list(df_partners_all_structure_id.columns):
-            finess_siret=pd.read_json("finess_siret-siege.json")
-            df_partners_all_structure_id=pd.merge(df_partners_all_structure_id,finess_siret,how='left', on='finess')
+            finess_siret=pd.read_csv(f"./DATA/{source}/finess_siret-siege.csv", sep= ";")[['finess','siret']]
+            finess_siret.loc[:,'siren']=finess_siret.loc[:,'siret'].apply(lambda x: str(x)[:9] if pd.isna(x)==False else None)
+            finess_siret.loc[:,'finess']=finess_siret.loc[:,'finess'].apply(lambda x: str(x) if pd.isna(x)==False else None)
+            finess_siret=finess_siret.dropna().drop_duplicates(subset=['finess'])
+            df_partners_all_structure_id.loc[:,'finess']=df_partners_all_structure_id.loc[:,'finess'].apply(lambda x: str(x) if pd.isna(x)==False else None)
+            df_partners_all_structure_id=pd.merge(df_partners_all_structure_id,finess_siret[['finess','siren']],how='left', on='finess')
+        if 'entite_SIRET' in list(df_partners.columns):
+            df_partners_all_structure_id['entite_SIRET']=df_partners_all_structure_id['entite_SIRET'].apply(lambda x: str(clean_budget(x)) if pd.isna(x)==False else None)
         df_partners_all_structure_id['id_structure']=df_partners_all_structure_id.apply(lambda row: get_id(row,sources[source]['identifiants_preferes_structure']), axis=1)
         df_partners_all_structure_id.to_json(f"./DATA/{source}/df_partners_id_structures.json")
         logger.debug(f"OK: The ids from the file with structure identifiers are successfully added to {source} structures - process_data (4/6)")
@@ -143,6 +139,14 @@ def get_id_structure(df_partners, source, sources, cached_data):
         identifiants_a_remplir=identifiants_a_remplir.drop_duplicates(subset=f"{sources[source]['nom_structure']}2")
         identifiants_a_remplir=identifiants_a_remplir.reset_index()
         del identifiants_a_remplir['index']
+        if sources[source]['ville'] in list(identifiants_a_remplir.columns) and sources[source]['pays'] in list(identifiants_a_remplir.columns) and sources[source]['adresse'] not in list(identifiants_a_remplir.columns):
+            identifiants_a_remplir=identifiants_a_remplir[[sources[source]['nom_structure'],sources[source]['ville'],sources[source]['pays']]]
+        elif sources[source]['ville'] in list(identifiants_a_remplir.columns) and sources[source]['pays'] in list(identifiants_a_remplir.columns) and sources[source]['adresse'] in list(identifiants_a_remplir.columns):
+            identifiants_a_remplir=identifiants_a_remplir[[sources[source]['nom_structure'],sources[source]['adresse'],sources[source]['ville'],sources[source]['pays']]]
+        elif sources[source]['region'] in list(identifiants_a_remplir.columns):
+            identifiants_a_remplir=identifiants_a_remplir[[sources[source]['nom_structure'],sources[source]['region']]]
+        elif sources[source]['ville'] in list(identifiants_a_remplir.columns) and sources[source]['pays'] not in list(identifiants_a_remplir.columns):
+            identifiants_a_remplir=identifiants_a_remplir[[sources[source]['nom_structure'],sources[source]['ville']]]
         identifiants_a_remplir.to_excel(f"./missing_ids_structures/partenaires_non_identifies_{source}.xlsx", index=False)
         logger.debug(f"OK: The missing ids are successfully added to the folder 'missing_id_structures' - process_data (5/6)")
     except Exception as e:
@@ -168,4 +172,21 @@ def get_id_person(df_partners_complete, source, sources, cached_data_persons, ca
         return None
     return df_partners_complete
 
+#update anr data
+def update_ANR_data(sources, app, formatting_projects_data, formatting_partners_data, send_only_newer_data):
+    source = 'ANR'
+    logger.debug(f"Starting data processing for source: {source}")
+    try:
+        cached_data, cached_data_persons, cached_data_orcid = cache(source)
+        df_partenaires = get_data(sources, source)
+        df_partenaires_structures = get_id_structure(df_partenaires, source, sources, cached_data)
+        get_id_person(df_partenaires_structures, source, sources, cached_data_persons, cached_data_orcid)
+        with app.app_context():
+            df_projects = formatting_projects_data(sources, source)
+            send_only_newer_data(df_projects, 'http://185.161.45.213/projects/projects', 'projects', source)    
+            df_partners = formatting_partners_data(sources, source)
+            send_only_newer_data(df_partners, 'http://185.161.45.213/projects/participations', 'partners', source)
+        logger.debug(f"Processing completed for source: {source}")
+    except Exception as e:
+        logger.exception(f"Error during ANR update: {str(e)}")
 
