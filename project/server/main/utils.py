@@ -168,25 +168,11 @@ def start_scheduler(sources,app,update_ANR_data,formatting_projects_data,formatt
             formatting_partners_data,
             send_only_newer_data
         ),
-        'interval',
-        seconds=30 
-    )
-    scheduler.start()
-    atexit.register(lambda: scheduler.shutdown())
-
-
-"""     scheduler.add_job(
-        lambda: update_ANR_data(
-            sources,
-            app,
-            formatting_projects_data,
-            formatting_partners_data,
-            send_only_newer_data
-        ),
         'cron',
         day=1,
         hour=3,
         minute=0
-    ) """
-
+    )
+    scheduler.start()
+    atexit.register(lambda: scheduler.shutdown())
     
