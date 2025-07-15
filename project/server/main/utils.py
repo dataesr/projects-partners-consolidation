@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
  
 #get the names of scanR structures
 def get_scanR_structure(x):
@@ -155,10 +157,36 @@ def clean_budget(x):
     else:
         return int(x_str.replace('.0','').replace('.00',''))
 
+#monthly update
+def start_scheduler(sources,app,update_ANR_data,formatting_projects_data,formatting_partners_data,send_only_newer_data):
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        lambda: update_ANR_data(
+            sources,
+            app,
+            formatting_projects_data,
+            formatting_partners_data,
+            send_only_newer_data
+        ),
+        'interval',
+        seconds=30 
+    )
+    scheduler.start()
+    atexit.register(lambda: scheduler.shutdown())
 
 
-
-
-
+"""     scheduler.add_job(
+        lambda: update_ANR_data(
+            sources,
+            app,
+            formatting_projects_data,
+            formatting_partners_data,
+            send_only_newer_data
+        ),
+        'cron',
+        day=1,
+        hour=3,
+        minute=0
+    ) """
 
     

@@ -8,6 +8,7 @@ from formatting_data_projects import formatting_projects_data
 from logger import get_logger
 from process_data import cache, get_data, get_id_structure, get_id_person, update_ANR_data
 from send_or_update_data import send_data, send_only_newer_data
+from utils import start_scheduler
 
 app=Flask(__name__)
 logger = get_logger(__name__)
@@ -66,12 +67,7 @@ def update_partners():
     send_only_newer_data(df_projects, 'http://185.161.45.213/projects/participations', 'partners', source)
     return jsonify({"message": "Update completed successfully", "source": source}), 202
 
-@app.route('/update/monthly', methods=['GET','POST']) 
-def update_ANR_monthly():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(lambda: update_ANR_data(sources,app,formatting_projects_data,formatting_partners_data,send_only_newer_data), 'cron', day=1, hour=3, minute=0)  # first day of the month at 3a.m.
-    scheduler.start()
-    atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
+    start_scheduler(sources,app,update_ANR_data,formatting_projects_data,formatting_partners_data,send_only_newer_data)
     app.run(debug=True, host='0.0.0.0')
