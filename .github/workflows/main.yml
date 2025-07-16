@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Log into registry
-        run: docker login ghcr.io -u ${{ github.actor }} -p ${{ .env.TOKEN }}
+        run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets_local.TOKEN }}
 
       - name: Build image
         run: docker build -f Dockerfile -t ${{ github.repository }} .
