@@ -169,7 +169,9 @@
     "code_projet": "",
     "annee": "annee",
     "identifiants_preferes_structure": [
-      "siret",
+      "SIRET",
+      "Siren",
+      "PaysageStructure",
       "id_structure_matcher",
       "id_structure_scanr",
       "code"
