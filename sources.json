@@ -183,6 +183,7 @@
     "resume_fr": "ProjetResume",
     "resume_en": "",
     "budget": "Subvention",
-    "acronyme": "Projet"
+    "acronyme": "Projet",
+    "id_partenaire": "id"
   }
 }
