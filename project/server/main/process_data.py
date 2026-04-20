@@ -7,7 +7,7 @@ from tqdm import tqdm
 from cached_data_handler import get_structure, get_person
 from id_from_orcid import orcid_to_idref
 from logger import get_logger
-from my_pickle import load_cache, write_cache
+from my_pickle import load_cache, write_cache, ensure_dir
 from utils import get_id,replace_all, get_scanR_structure, strip_outer_quotes, clean_budget
 
 logger = get_logger(__name__)
@@ -18,22 +18,31 @@ Authorization_ORCID = os.getenv('Authorization_cluster_BSO_ORCID')
 
 def cache(source):
     cached_data = {}
+    path_data = f"./DATA/{source}/caches/cached_{source.lower()}_data.pkl"
+    ensure_dir(path_data)
+
     try:
-        cached_data = load_cache(cached_data,f"./DATA/{source}/caches/cached_{source.lower()}_data.pkl")
-    except:
-        write_cache(cached_data,f"./DATA/{source}/caches/cached_{source.lower()}_data.pkl")
-        
+        cached_data = load_cache(cached_data, path_data)
+    except FileNotFoundError:
+        write_cache(cached_data, path_data)
+
     cached_data_persons = {}
+    path_persons = f"./DATA/{source}/caches/cached_{source.lower()}_data_persons.pkl"
+    ensure_dir(path_persons)
+
     try:
-        cached_data_persons = load_cache(cached_data_persons,f"./DATA/{source}/caches/cached_{source.lower()}_data_persons.pkl")
-    except:
-        write_cache(cached_data_persons,f"./DATA/{source}/caches/cached_{source.lower()}_data_persons.pkl")
-        
+        cached_data_persons = load_cache(cached_data_persons, path_persons)
+    except FileNotFoundError:
+        write_cache(cached_data_persons, path_persons)
+
     cached_data_orcid = {}
+    path_orcid = f"./DATA/{source}/caches/cached_{source.lower()}_data_orcid.pkl"
+    ensure_dir(path_orcid)
+
     try:
-        cached_data_orcid = load_cache(cached_data_orcid,f"./DATA/{source}/caches/cached_{source.lower()}_data_orcid.pkl")
-    except:
-        write_cache(cached_data_orcid,f"./DATA/{source}/caches/cached_{source.lower()}_data_orcid.pkl")
+        cached_data_orcid = load_cache(cached_data_orcid, path_orcid)
+    except FileNotFoundError:
+        write_cache(cached_data_orcid, path_orcid)
 
     return cached_data, cached_data_persons, cached_data_orcid
 

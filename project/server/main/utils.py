@@ -159,6 +159,13 @@ def clean_budget(x):
 
 #monthly update
 def start_scheduler(sources,app,update_ANR_data,formatting_projects_data,formatting_partners_data,send_only_newer_data):
+    update_ANR_data(
+        sources,
+        app,
+        formatting_projects_data,
+        formatting_partners_data,
+        send_only_newer_data
+    )
     scheduler = BackgroundScheduler()
     scheduler.add_job(
         lambda: update_ANR_data(

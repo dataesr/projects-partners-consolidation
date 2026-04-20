@@ -1,4 +1,8 @@
 import pickle
+import os
+
+def ensure_dir(path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
 
 def write_cache(cached_openalex_data,path):
     pickle.dump(cached_openalex_data, open(path, 'wb'))
